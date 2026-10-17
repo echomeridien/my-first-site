@@ -3,24 +3,73 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My First Site</title>
+  <meta name="theme-color" content="#0b0b0c">
+  <title>Zeyad Davids</title>
+  <link rel="preload" as="image" href="images/1-1920.webp"
+        imagesrcset="images/1-1080.webp 1080w, images/1-1920.webp 1920w" imagesizes="100vw">
   <style>
-    body {
-      font-family: -apple-system, sans-serif;
-      background: #0f172a;
-      color: #e2e8f0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
+    html, body {
       margin: 0;
+      height: 100%;
+      background: #0b0b0c;
+      overflow: hidden;
     }
-    h1 { color: #38bdf8; }
+    .gallery {
+      position: fixed;
+      inset: 0;
+    }
+    .gallery img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transform: scale(1.08);
+      transition: opacity 2.4s ease-in-out, transform 9s ease-out;
+    }
+    .gallery img.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+    /* Soft vignette for a calmer, richer look */
+    .gallery::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.45) 100%);
+      pointer-events: none;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .gallery img { transform: none; transition: opacity 1.5s ease-in-out; }
+    }
   </style>
 </head>
 <body>
-  <h1>Hello, world 👋 What's on your mind?</h1>
+  <div class="gallery" aria-hidden="true">
+    <img class="active" alt="" fetchpriority="high"
+         srcset="images/1-1080.webp 1080w, images/1-1920.webp 1920w" sizes="100vw" src="images/1-1920.webp">
+    <img alt="" fetchpriority="low" decoding="async"
+         srcset="images/2-1080.webp 1080w, images/2-1920.webp 1920w" sizes="100vw" src="images/2-1920.webp">
+    <img alt="" fetchpriority="low" decoding="async"
+         srcset="images/3-1080.webp 1080w, images/3-1920.webp 1920w" sizes="100vw" src="images/3-1920.webp">
+    <img alt="" fetchpriority="low" decoding="async"
+         srcset="images/4-1080.webp 1080w, images/4-1920.webp 1920w" sizes="100vw" src="images/4-1920.webp">
+    <img alt="" fetchpriority="low" decoding="async"
+         srcset="images/5-1080.webp 1080w, images/5-1920.webp 1920w" sizes="100vw" src="images/5-1920.webp">
+  </div>
 
+  <script>
+    const slides = document.querySelectorAll('.gallery img');
+    let current = 0;
+    setInterval(() => {
+      const next = (current + 1) % slides.length;
+      // Wait for the next image if it hasn't loaded yet
+      if (!slides[next].complete) return;
+      slides[current].classList.remove('active');
+      slides[next].classList.add('active');
+      current = next;
+    }, 7000);
+  </script>
 </body>
 </html>
